@@ -24,7 +24,7 @@ static void GetAlluser(RestClient client)
 //GET
 static void GetSingleUser(RestClient client)
 {
-    var getUserRequest = new RestRequest("posts/1", Method.Get);
+    var getUserRequest = new RestRequest("posts/2", Method.Get);
     var getUserResponse = client.Execute(getUserRequest);
 
     if (getUserResponse.StatusCode == System.Net.HttpStatusCode.OK)
@@ -32,8 +32,8 @@ static void GetSingleUser(RestClient client)
 
         JObject? userJson = JObject.Parse(getUserResponse?.Content);
 
-        string? userId = userJson?["data"]?["id"]?.ToString();
-        string? userTitle = userJson?["data"]?["title"]?.ToString();
+        string? userId = userJson?["id"]?.ToString();
+        string? userTitle = userJson?["title"]?.ToString();
 
         Console.WriteLine($"User Details  : {userId} {userTitle}");
     }
