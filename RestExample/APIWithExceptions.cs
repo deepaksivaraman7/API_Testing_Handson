@@ -17,7 +17,7 @@ namespace RestExample
             var req = new RestRequest("users/5", Method.Get);
             var response = client.Execute(req);
 
-            //With error
+            //with error
             if (!response.IsSuccessful)
             {
                 try
