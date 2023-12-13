@@ -40,9 +40,10 @@ namespace RestExampleNUnit
             request.AddQueryParameter("page", "1");
             request.AddHeader("Content-Type", "application/json");
             var response = client.Execute(request);
+            //var userData = JsonConvert.DeserializeObject<UserDataResponse>(response.Content);
             Assert.That(response.StatusCode, Is.EqualTo(System.Net.HttpStatusCode.OK));
             Assert.NotNull(response.Content);
-            Console.WriteLine(response.Content);
+            //Console.WriteLine(response.Content[1]);
         }
         [Test,Order(1)]
         public void CreateUser()

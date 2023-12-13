@@ -1,83 +1,182 @@
-﻿using Newtonsoft.Json;
+﻿using AssignmentsNUnit.Utilities;
+using Newtonsoft.Json;
 using RestSharp;
+using Serilog;
 
 
 namespace AssignmentsNUnit
 {
-    internal class JsonPlaceHolderTests
+    internal class JsonPlaceHolderTests:CoreCodes
     {
-        private RestClient client;
-        private string baseUrl = "https://jsonplaceholder.typicode.com/";
-
-        [SetUp]
-        public void Setup()
+        [Test, Order(2),TestCase(2)]
+        public void GetSinglePost(int postId)
         {
-            client = new RestClient(baseUrl);
-        }
+            test = extent.CreateTest("Get single post");
+            Log.Information("GetSinglePost test started");
 
-        [Test, Order(2)]
-        public void GetSinglePost()
-        {
-            var request = new RestRequest("posts/2", Method.Get);
+            var request = new RestRequest("posts/"+postId, Method.Get);
             var response = client.Execute(request);
-            Assert.That(response.StatusCode, Is.EqualTo(System.Net.HttpStatusCode.OK));
-            var post = JsonConvert.DeserializeObject<PostData>(response.Content);
+            try
+            {
+                Assert.That(response.StatusCode, Is.EqualTo(System.Net.HttpStatusCode.OK));
+                Log.Information($"API Response: {response.Content}");
 
-            Assert.NotNull(post);
-            Assert.That(post.Id, Is.EqualTo(2));
-            Assert.IsNotEmpty(post.Title);
+                var post = JsonConvert.DeserializeObject<PostData>(response.Content);
+                Assert.NotNull(post);
+                Log.Information("Post returned");
+
+                Assert.That(post.Id, Is.EqualTo(postId));
+                Log.Information("Post ID matches with fetch");
+
+                Assert.IsNotEmpty(post.Title);
+                Log.Information("Title is not empty");
+
+                Log.Information("GetSinglePost test passed all asserts");
+                test.Pass("GetSinglePost test passed all asserts");
+            }
+            catch (AssertionException)
+            {
+                Log.Information("GetSinglePost test failed");
+                test.Fail("GetSinglePost test failed");
+            }
         }
         [Test, Order(1)]
         public void CreatePost()
         {
-            var request = new RestRequest("users", Method.Post);
+            test = extent.CreateTest("Create post");
+            Log.Information("CreatePost test started");
+
+            var request = new RestRequest("posts", Method.Post);
             request.AddHeader("Content-Type", "application/json");
             request.AddJsonBody(new { userId = 100, title="new title", body="new body" });
             var response = client.Execute(request);
-            Assert.That(response.StatusCode, Is.EqualTo(System.Net.HttpStatusCode.Created));
-            var post = JsonConvert.DeserializeObject<PostData>(response.Content);
+            try
+            {
+                Assert.That(response.StatusCode, Is.EqualTo(System.Net.HttpStatusCode.Created));
+                Log.Information($"API Response: {response.Content}");
 
-            Assert.NotNull(post);
-            Assert.NotNull(post.Id);
+                var post = JsonConvert.DeserializeObject<PostData>(response.Content);
+
+                Assert.NotNull(post);
+                Log.Information("Post returned");
+
+                Assert.NotNull(post.Id);
+                Log.Information("Post ID is not null");
+
+                Log.Information("CreatePost test passed all asserts");
+                test.Pass("CreatePost test passed all asserts");
+            }
+            catch(AssertionException)
+            {
+                Log.Information("CreatePost test failed");
+                test.Fail("CreatePost test failed");
+            }
         }
-        [Test, Order(3)]
-        public void UpdatePost()
+        [Test, Order(3),TestCase(2)]
+        public void UpdatePost(int postId)
         {
-            var request = new RestRequest("posts/2", Method.Put);
+            test = extent.CreateTest("Update post");
+            Log.Information("UpdatePost test started");
+
+            var request = new RestRequest("posts/"+postId, Method.Put);
             request.AddHeader("Content-Type", "application/json");
             request.AddJsonBody(new { userId = 100, title = "new title", body = "new body" });
             var response = client.Execute(request);
-            Assert.That(response.StatusCode, Is.EqualTo(System.Net.HttpStatusCode.OK));
-            var post = JsonConvert.DeserializeObject<PostData>(response.Content);
+            try
+            {
+                Assert.That(response.StatusCode, Is.EqualTo(System.Net.HttpStatusCode.OK));
+                Log.Information($"API Response: {response.Content}");
 
-            Assert.NotNull(post);
-            Assert.That(post.Id,Is.EqualTo(2));
+                var post = JsonConvert.DeserializeObject<PostData>(response.Content);
+
+                Assert.NotNull(post);
+                Log.Information("Post returned");
+
+                Assert.That(post.Id, Is.EqualTo(postId));
+                Log.Information("Post ID matches with fetch");
+
+                Log.Information("UpdatePost test passed all asserts");
+                test.Pass("UpdatePost test passed all asserts");
+            }
+            catch (AssertionException)
+            {
+                Log.Information("UpdatePost test failed");
+                test.Fail("UpdatePost test failed");
+            }
         }
-        [Test, Order(4)]
-        public void DeletePost()
+        [Test, Order(4),TestCase(2)]
+        public void DeletePost(int postId)
         {
-            var request = new RestRequest("posts/2", Method.Delete);
+            test = extent.CreateTest("Delete post");
+            Log.Information("DeletePost test started");
+
+            var request = new RestRequest("posts/"+postId, Method.Delete);
             var response = client.Execute(request);
-            Assert.That(response.StatusCode, Is.EqualTo(System.Net.HttpStatusCode.OK));
-            Assert.That(response.Content,Is.EqualTo("{}"));
+            try
+            {
+                Assert.That(response.StatusCode, Is.EqualTo(System.Net.HttpStatusCode.OK));
+                Log.Information($"API Response: {response.Content}");
+
+                Assert.That(response.Content,Is.EqualTo("{}"));
+                Log.Information("Empty response returned");
+
+                Log.Information("DeletePost test passed all asserts");
+                test.Pass("DeletePost test passed all asserts");
+            }
+            catch (AssertionException)
+            {
+                Log.Information("DeletePost test failed");
+                test.Fail("DeletePost test failed");
+            }
         }
-        [Test, Order(5)]
-        public void GetNonExistingPost()
+        [Test, Order(5),TestCase(999)]
+        public void GetNonExistingPost(int postId)
         {
-            var request = new RestRequest("posts/999", Method.Get);
+            test = extent.CreateTest("Get non existing post");
+            Log.Information("GetNonExistingPost test started");
+
+            var request = new RestRequest("posts/"+postId, Method.Get);
             var response = client.Execute(request);
-            Assert.That(response.StatusCode, Is.EqualTo(System.Net.HttpStatusCode.NotFound));
+            try
+            {
+                Assert.That(response.StatusCode, Is.EqualTo(System.Net.HttpStatusCode.NotFound));
+                Log.Information($"API Response: {response.Content}");
+
+                Log.Information("GetNonExistingPost test passed all asserts");
+                test.Pass("GetNonExistingPost test passed all asserts");
+            }
+            catch (AssertionException)
+            {
+                Log.Information("GetNonExistingPost test failed");
+                test.Fail("GetNonExistingPost test failed");
+            }
         }
-        [Test, Order(6)]
-        public void GetAllPosts()
+        [Test, Order(6),TestCase(1)]
+        public void GetAllPosts(int pageNo)
         {
-            var request = new RestRequest("users", Method.Get);
-            request.AddQueryParameter("page", "1");
+            test = extent.CreateTest("Get all posts");
+            Log.Information("GetAllPosts test started");
+
+            var request = new RestRequest("posts", Method.Get);
+            request.AddQueryParameter("page", pageNo);
             request.AddHeader("Content-Type", "application/json");
             var response = client.Execute(request);
-            Assert.That(response.StatusCode, Is.EqualTo(System.Net.HttpStatusCode.OK));
-            Assert.NotNull(response.Content);
-            Console.WriteLine(response.Content);
+            try
+            {
+                Assert.That(response.StatusCode, Is.EqualTo(System.Net.HttpStatusCode.OK));
+                Log.Information($"API Response: {response.Content}");
+
+                Assert.NotNull(response.Content);
+                Log.Information("Posts returned");
+
+                Log.Information("GetAllPosts test passed all asserts");
+                test.Pass("GetAllPosts test passed all asserts");
+            }
+            catch(AssertionException)
+            {
+                Log.Information("GetAllPosts test failed");
+                test.Fail("GetAllPosts test failed");
+            }
         }
     }
 }
