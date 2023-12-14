@@ -2,8 +2,13 @@
 using AventStack.ExtentReports;
 using RestSharp;
 using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace AssignmentsNUnit.Utilities
+namespace RestfulBooking.Utilities
 {
     internal class CoreCodes
     {
@@ -28,7 +33,7 @@ namespace AssignmentsNUnit.Utilities
         [SetUp]
         public void Setup()
         {
-            client = new RestClient("https://jsonplaceholder.typicode.com/");
+            client = new RestClient("https://restful-booker.herokuapp.com/");
         }
 
         [OneTimeTearDown]

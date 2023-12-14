@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using RestExample;
-using RestSharp;
-using RestSharp.Serializers;
+﻿using RestExample;
 /*
 string baseurl = "https://reqres.in/api";
 var client =new RestClient(baseurl);
