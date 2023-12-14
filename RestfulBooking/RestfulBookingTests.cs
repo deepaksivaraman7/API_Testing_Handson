@@ -46,7 +46,11 @@ namespace RestfulBooking
 
                 var bookingData = bookingId.Booking;
                 Assert.That(bookingData?.FirstName, Is.EqualTo("Jim"));
-                Log.Information("First name is not null as expected");
+                Log.Information("First name returned as expected");
+
+                var bookingdates = bookingData.BookingDates;
+                Assert.That(bookingdates?.Checkin, Is.EqualTo("2018-01-01"));
+                Log.Information("Checkin date returned as expected");
 
                 Log.Information("CreateBooking test passed all asserts");
                 test.Pass("CreateBooking test passed all asserts");
@@ -122,6 +126,7 @@ namespace RestfulBooking
 
                 var booking = JsonConvert.DeserializeObject<BookingDataResponse>(response.Content);
                 Assert.That(booking?.FirstName, Is.EqualTo("James"));
+                Log.Information("First name returned as expected");
 
                 Log.Information("UpdateBooking test passed all asserts");
                 test.Pass("UpdateBooking test passed all asserts");
@@ -134,7 +139,7 @@ namespace RestfulBooking
         }
 
 
-        [Test, Order(4), TestCase(24)]
+        [Test, Order(4), TestCase(25)]
         public void DeleteBooking(int bookingId)
         {
             test = extent.CreateTest("Delete booking");
