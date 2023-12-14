@@ -16,10 +16,10 @@ namespace RestfulBooking
         public string? LastName { get; set; }
 
         [JsonProperty("totalprice")]
-        public string? TotalPrice { get; set; }
+        public int TotalPrice { get; set; }
 
         [JsonProperty("depositpaid")]
-        public string? DepositPaid { get; set; }
+        public bool DepositPaid { get; set; }
 
         [JsonProperty("bookingdates")]
         public BookingDatesResponse? BookingDates { get; set; }

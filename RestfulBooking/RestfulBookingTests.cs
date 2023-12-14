@@ -139,7 +139,7 @@ namespace RestfulBooking
         }
 
 
-        [Test, Order(4), TestCase(25)]
+        [Test, Order(4), TestCase(20)]
         public void DeleteBooking(int bookingId)
         {
             test = extent.CreateTest("Delete booking");
